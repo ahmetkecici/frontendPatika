@@ -82,9 +82,80 @@ const menu = [
   },
 ];
 
+const menuConElm = document.querySelector(".section-center");
+const categoryBtnConElm = document.querySelector(".btn-container");
+
+const categories=["All"]
+let categoryBtn;
 
 
 
-menu.map(x=>{
-  console.log(x.category)
-})
+function onLoad(){
+  fillCategories()
+
+    fillMenu(menu)
+  fillCategoryButtons()
+}
+
+function createMenuElement(menu) {
+  let menuElement = document.createElement("div");
+  menuElement.className = "menu-items col-lg-6 col-sm-12";
+  menuElement.innerHTML = `
+  <img src="${menu.img}"  class="photo"/>
+  <div class="menu-info">
+  <div class="menu-title">
+    <h4>${menu.title} Ramen</h4>
+    <h4 class="price">${menu.price}</h4>
+  </div>
+  <div class="menu-text">
+    ${menu.desc}
+  </div>
+  `
+  menuConElm.appendChild(menuElement)
+}
+
+function filterByCategory(e) 
+{     
+ clearAll()
+ let category=e.target.dataset.id
+ const filteredMenu =category=="All"?menu:menu.filter(function(menuItem){return menuItem.category==category })
+  fillMenu(filteredMenu)
+}
+
+function fillCategories(){
+  menu.forEach(menuItem=>{
+    if (!categories.includes(menuItem.category)) {
+      categories.push(menuItem.category)
+    }
+  })
+   
+}
+
+function fillMenu(menu2) {
+  menu2.forEach(function (menuItem) {
+      createMenuElement(menuItem)
+    });
+
+}
+function fillCategoryButtons(){
+  categories.forEach(category=>{
+    createCategoryBtn(category)
+  })
+} 
+
+ function createCategoryBtn(category){
+   categoryBtn=document.createElement("button")
+  categoryBtn.className="btn btn-outline-dark btn-item";
+  categoryBtn.dataset.id=category;
+  categoryBtn.textContent=category
+  categoryBtnConElm.appendChild(categoryBtn)
+  categoryBtn.addEventListener("click",filterByCategory)
+ }
+
+function clearAll(){
+  menuConElm.innerHTML="";
+}
+
+
+
+onLoad();
